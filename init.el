@@ -144,7 +144,7 @@
       ;; フォントセットを作る
       (let* ((fontset-name "myfonts") ; フォントセットの名前
              (size 14) ; ASCIIフォントのサイズ [9/10/12/14/15/17/19/20/...]
-             (asciifont "Menlo") ; ASCIIフォント
+             (asciifont "Monaco") ; ASCIIフォント
              (jpfont "Hiragino Maru Gothic ProN") ; 日本語フォント
              (font (format "%s-%d:weight=normal:slant=normal" asciifont size))
              (fontspec (font-spec :family asciifont))
@@ -413,7 +413,6 @@
            (offset (- (current-column) (current-indentation)))
            (indentation (js--proper-indentation parse-status))
            node)
-
       (save-excursion
         (back-to-indentation)
         (if (looking-at "case\\s-")
@@ -443,3 +442,12 @@
     )
   )
 (add-hook 'js2-mode-hook 'my-js2-mode-hook)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; lua-mode
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(autoload 'lua-mode "lua-mode" "Lua editing mode." t)
+(add-to-list 'auto-mode-alist '("\\.lua$" . lua-mode))
+(add-to-list 'interpreter-mode-alist '("lua" . lua-mode))
+(add-hook 'lua-mode-hook
+          (lambda () (setq-local company-backends '(company-lua))))

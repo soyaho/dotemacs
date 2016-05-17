@@ -2,6 +2,7 @@
 (source melpa)
 (source marmalade)
 
+(depends-on "lua-mode")
 (depends-on "ace-isearch")
 (depends-on "whitespace")
 (depends-on "iedit")
