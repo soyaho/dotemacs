@@ -115,7 +115,7 @@
 (set-foreground-color                                  "#CCCCCC") ; 文字色
 (set-background-color                                  "#000000") ; 背景色
 (set-cursor-color                                      "#FF0000") ; カーソル色
-(set-face-background 'region                           "#555599") ; リージョン
+(set-face-background 'region                           "#3333FF") ; リージョン
 (set-face-foreground 'mode-line                        "#333333") ; モードライン文字
 (set-face-background 'mode-line                        "#CCCCCC") ; モードライン背景
 (set-face-foreground 'mode-line-inactive               "#CCCCCC") ; モードライン文字(非アクティブ)
@@ -239,7 +239,8 @@
 ;; highlight current line
 (require 'highlight-current-line)
 (highlight-current-line-on t)
-(set-face-background 'highlight-current-line-face "#004132")
+;;(set-face-background 'highlight-current-line-face "#004132")
+(set-face-background 'highlight-current-line-face "#00")
 
 ;; highlight paren
 (show-paren-mode 1)
@@ -335,7 +336,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; quickrun
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;(require 'quickrun)
 (global-set-key (kbd "C-c c") 'quickrun)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -388,7 +388,7 @@
                     :underline t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; mode系
+;; web-mode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 (add-to-list 'auto-mode-alist '("\\.phtml$"     . web-mode))
 (add-to-list 'auto-mode-alist '("\\.tpl\\.php$" . web-mode))
@@ -396,6 +396,10 @@
 (add-to-list 'auto-mode-alist '("\\.as[cp]x$"   . web-mode))
 (add-to-list 'auto-mode-alist '("\\.erb$"       . web-mode))
 (add-to-list 'auto-mode-alist '("\\.html?$"     . web-mode))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; json-mode
+;;;;;;;;;;;;;;;;;;;;;;;;;;
 (add-to-list 'auto-mode-alist '("\\.json$" . json-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
