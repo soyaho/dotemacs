@@ -61,7 +61,7 @@
 ;; company
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 (global-company-mode) ; 全バッファで有効にする 
-(setq company-idle-delay 0) ; デフォルトは0.5
+(setq company-idle-delay 0.1) ; デフォルトは0.5
 (setq company-minimum-prefix-length 2) ; デフォルトは4
 (setq company-selection-wrap-around t) ; 候補の一番下でさらに下に行こうとすると一番上に戻る
 (define-key company-active-map (kbd "M-n") nil)
@@ -138,13 +138,13 @@
     (progn
       (tool-bar-mode -1)                  ; ツールバー非表示
       (set-scroll-bar-mode nil)           ; スクロールバー非表示
-      (set-frame-parameter nil 'alpha 85) ; 透明度
+;      (set-frame-parameter nil 'alpha 85) ; 透明度
       (setq line-spacing 1.4)             ; 行間
 
       ;; フォントセットを作る
       (let* ((fontset-name "myfonts") ; フォントセットの名前
              (size 14) ; ASCIIフォントのサイズ [9/10/12/14/15/17/19/20/...]
-             (asciifont "Monaco") ; ASCIIフォント
+             (asciifont "Menlo") ; ASCIIフォント
              (jpfont "Hiragino Maru Gothic ProN") ; 日本語フォント
              (font (format "%s-%d:weight=normal:slant=normal" asciifont size))
              (fontspec (font-spec :family asciifont))
@@ -211,7 +211,7 @@
 (global-unset-key "\C-z") ;; globalを無効化
 (global-unset-key "\C-j") ;; globalを無効化
 (global-set-key (kbd "M-g")     'goto-line)
-(global-set-key (kbd "M-r")     'comment-or-uncomment-region)
+(global-set-key (kbd "M-?")     'comment-or-uncomment-region)
 (global-set-key (kbd "M-c")     'kill-ring-save)
 (global-set-key (kbd "M-v")     'yank)
 
