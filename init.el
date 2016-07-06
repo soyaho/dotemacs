@@ -139,12 +139,12 @@
       (tool-bar-mode -1)                  ; ツールバー非表示
       (set-scroll-bar-mode nil)           ; スクロールバー非表示
 ;      (set-frame-parameter nil 'alpha 85) ; 透明度
-      (setq line-spacing 1.4)             ; 行間
+      (setq-default line-spacing 0.2)             ; 行間
 
       ;; フォントセットを作る
       (let* ((fontset-name "myfonts") ; フォントセットの名前
              (size 14) ; ASCIIフォントのサイズ [9/10/12/14/15/17/19/20/...]
-             (asciifont "Menlo") ; ASCIIフォント
+             (asciifont "Monaco") ; ASCIIフォント
              (jpfont "Hiragino Maru Gothic ProN") ; 日本語フォント
              (font (format "%s-%d:weight=normal:slant=normal" asciifont size))
              (fontspec (font-spec :family asciifont))
