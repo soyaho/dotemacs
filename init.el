@@ -458,15 +458,6 @@
   )
 (add-hook 'js2-mode-hook 'my-js2-mode-hook)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; lua-mode
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(autoload 'lua-mode "lua-mode" "Lua editing mode." t)
-(add-to-list 'auto-mode-alist '("\\.lua$" . lua-mode))
-(add-to-list 'interpreter-mode-alist '("lua" . lua-mode))
-(add-hook 'lua-mode-hook
-          (lambda () (setq-local company-backends '(company-lua))))
-
 ;; --------------------------------------------------
 ;; ruby-mode
 ;; http://shibayu36.hatenablog.com/entry/2013/03/18/192651

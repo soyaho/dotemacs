@@ -6,7 +6,6 @@
 (depends-on "ruby-end")
 (depends-on "ruby-block")
 
-(depends-on "lua-mode")
 (depends-on "ace-isearch")
 (depends-on "whitespace")
 (depends-on "iedit")
