@@ -143,7 +143,7 @@
       (tool-bar-mode -1)                  ; ツールバー非表示
       (set-scroll-bar-mode nil)           ; スクロールバー非表示
 ;      (set-frame-parameter nil 'alpha 85) ; 透明度
-      (setq-default line-spacing 0.2)             ; 行間
+      (setq-default line-spacing 0.15)             ; 行間
 
       ;; フォントセットを作る
       (let* ((fontset-name "myfonts") ; フォントセットの名前
@@ -244,7 +244,7 @@
 (require 'highlight-current-line)
 (highlight-current-line-on t)
 ;;(set-face-background 'highlight-current-line-face "#004132")
-(set-face-background 'highlight-current-line-face "#00")
+(set-face-background 'highlight-current-line-face "#004132")
 
 ;; highlight paren
 (show-paren-mode 1)
@@ -277,6 +277,13 @@
 
 ;; Column number
 (column-number-mode t)
+
+;; line number
+(global-linum-mode t)
+(setq linum-format "%3d  ")
+(custom-set-faces
+ ;; '(linum ((t (:inherit (shadow default) :background "Gray23")))))
+  '(linum ((t (:inherit (shadow default))))))
 
 ;; Fill column
 (setq default-fill-column 72)
