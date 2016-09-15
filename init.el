@@ -361,6 +361,7 @@
 ;; iedit
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 (require 'iedit)
+(global-set-key (kbd "M-n") 'iedit-mode)
 (define-key iedit-mode-keymap (kbd "C-m") 'iedit-toggle-selection)
 (define-key iedit-mode-keymap (kbd "M-p") 'iedit-expand-up-a-line)
 (define-key iedit-mode-keymap (kbd "M-n") 'iedit-expand-down-a-line)
