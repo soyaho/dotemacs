@@ -8,93 +8,6 @@
 (require 'cask)
 (cask-initialize)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; helm
-;;;;;;;;;;;;;;;;;;;;;;;;;;
-(helm-mode 1)
-(add-to-list 'helm-completing-read-handlers-alist '(find-file . nil))
-
-(define-key helm-map (kbd "C-h") 'delete-backward-char)
-(define-key helm-find-files-map (kbd "C-h") 'delete-backward-char)
-(define-key helm-find-files-map (kbd "TAB") 'helm-execute-persistent-action)
-(define-key helm-read-file-map (kbd "TAB") 'helm-execute-persistent-action)
-
-(defvar helm-source-emacs-commands
-  (helm-build-sync-source "Emacs commands"
-    :candidates (lambda ()
-                  (let ((cmds))
-                    (mapatoms
-                     (lambda (elt) (when (commandp elt) (push elt cmds))))
-                    cmds))
-    :coerce #'intern-soft
-    :action #'command-execute)
-  "A simple helm source for Emacs commands.")
-
-(defvar helm-source-emacs-commands-history
-  (helm-build-sync-source "Emacs commands history"
-    :candidates (lambda ()
-                  (let ((cmds))
-                    (dolist (elem extended-command-history)
-                      (push (intern elem) cmds))
-                    cmds))
-    :coerce #'intern-soft
-    :action #'command-execute)
-  "Emacs commands history")
-
-(custom-set-variables
- '(helm-mini-default-sources '(helm-source-buffers-list
-                               helm-source-recentf
-                               helm-source-files-in-current-dir
-                               helm-source-emacs-commands-history
-                               helm-source-emacs-commands
-                               )))
-
-(define-key global-map (kbd "C-o") 'helm-mini)
-(define-key global-map (kbd "M-y") 'helm-show-kill-ring)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; ace-isearch
-;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(global-ace-isearch-mode +1)
-(custom-set-variables
- '(ace-isearch-jump-delay 1.0))
-(setq ace-isearch-use-function-from-isearch nil)
-(define-key isearch-mode-map (kbd "C-o") 'helm-multi-swoop-all-from-isearch)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;
-;; company
-;;;;;;;;;;;;;;;;;;;;;;;;;
-(global-company-mode) ; 全バッファで有効にする 
-(setq company-idle-delay 0.1) ; デフォルトは0.5
-(setq company-minimum-prefix-length 2) ; デフォルトは4
-(setq company-selection-wrap-around t) ; 候補の一番下でさらに下に行こうとすると一番上に戻る
-(define-key company-active-map (kbd "M-n") nil)
-(define-key company-active-map (kbd "M-p") nil)
-(define-key company-active-map (kbd "C-n") 'company-select-next)
-(define-key company-active-map (kbd "C-p") 'company-select-previous)
-(define-key company-active-map (kbd "C-h") nil)
-(defun company--insert-candidate2 (candidate)
-  (when (> (length candidate) 0)
-    (setq candidate (substring-no-properties candidate))
-    (if (eq (company-call-backend 'ignore-case) 'keep-prefix)
-        (insert (company-strip-prefix candidate))
-      (if (equal company-prefix candidate)
-          (company-select-next)
-          (delete-region (- (point) (length company-prefix)) (point))
-        (insert candidate))
-      )))
-
-(defun company-complete-common2 ()
-  (interactive)
-  (when (company-manual-begin)
-    (if (and (not (cdr company-candidates))
-             (equal company-common (car company-candidates)))
-        (company-complete-selection)
-      (company--insert-candidate2 company-common))))
-
-(define-key company-active-map [tab] 'company-complete-common2)
-(define-key company-active-map [backtab] 'company-select-previous) ; おまけ
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; defalut setting
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -140,6 +53,10 @@
 ;;______________________________________________________________________
 (if window-system
     (progn
+      ;; key binding
+      (setq ns-command-modifier (quote meta))
+      (setq ns-alternate-modifier (quote super))
+
       (tool-bar-mode -1)                  ; ツールバー非表示
       (set-scroll-bar-mode nil)           ; スクロールバー非表示
 ;      (set-frame-parameter nil 'alpha 85) ; 透明度
@@ -209,8 +126,6 @@
 (set-clipboard-coding-system    'utf-8)
 
 ;; key binding
-(setq ns-command-modifier (quote meta))
-(setq ns-alternate-modifier (quote super))
 (keyboard-translate ?\C-h ?\C-?) ;; C-h にバックスペース
 (global-unset-key "\C-z") ;; globalを無効化
 (global-unset-key "\C-j") ;; globalを無効化
@@ -241,10 +156,10 @@
 ;; highlight
 ;;______________________________________________________________________
 ;; highlight current line
-(require 'highlight-current-line)
-(highlight-current-line-on t)
+;;(require 'highlight-current-line)
+;;(highlight-current-line-on t)
 ;;(set-face-background 'highlight-current-line-face "#004132")
-(set-face-background 'highlight-current-line-face "#004132")
+;;(set-face-background 'highlight-current-line-face "#004132")
 
 ;; highlight paren
 (show-paren-mode 1)
@@ -318,6 +233,85 @@
 ;; diredバッファでC-sした時にファイル名だけにマッチするように
 (setq dired-isearch-filenames t)
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; helm
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+(helm-mode 1)
+(add-to-list 'helm-completing-read-handlers-alist '(find-file . nil))
+
+(define-key helm-map (kbd "C-h") 'delete-backward-char)
+(define-key helm-find-files-map (kbd "C-h") 'delete-backward-char)
+(define-key helm-find-files-map (kbd "TAB") 'helm-execute-persistent-action)
+(define-key helm-read-file-map (kbd "TAB") 'helm-execute-persistent-action)
+
+(defvar helm-source-emacs-commands
+  (helm-build-sync-source "Emacs commands"
+    :candidates (lambda ()
+                  (let ((cmds))
+                    (mapatoms
+                     (lambda (elt) (when (commandp elt) (push elt cmds))))
+                    cmds))
+    :coerce #'intern-soft
+    :action #'command-execute)
+  "A simple helm source for Emacs commands.")
+
+(defvar helm-source-emacs-commands-history
+  (helm-build-sync-source "Emacs commands history"
+    :candidates (lambda ()
+                  (let ((cmds))
+                    (dolist (elem extended-command-history)
+                      (push (intern elem) cmds))
+                    cmds))
+    :coerce #'intern-soft
+    :action #'command-execute)
+  "Emacs commands history")
+
+(custom-set-variables
+ '(helm-mini-default-sources '(helm-source-buffers-list
+                               helm-source-recentf
+                               helm-source-files-in-current-dir
+                               helm-source-emacs-commands-history
+                               helm-source-emacs-commands
+                               )))
+
+(define-key global-map (kbd "C-o") 'helm-mini)
+(define-key global-map (kbd "M-y") 'helm-show-kill-ring)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;
+;; company
+;;;;;;;;;;;;;;;;;;;;;;;;;
+(global-company-mode) ; 全バッファで有効にする 
+(setq company-idle-delay 0.1) ; デフォルトは0.5
+(setq company-minimum-prefix-length 2) ; デフォルトは4
+(setq company-selection-wrap-around t) ; 候補の一番下でさらに下に行こうとすると一番上に戻る
+(define-key company-active-map (kbd "M-n") nil)
+(define-key company-active-map (kbd "M-p") nil)
+(define-key company-active-map (kbd "C-n") 'company-select-next)
+(define-key company-active-map (kbd "C-p") 'company-select-previous)
+(define-key company-active-map (kbd "C-h") nil)
+(defun company--insert-candidate2 (candidate)
+  (when (> (length candidate) 0)
+    (setq candidate (substring-no-properties candidate))
+    (if (eq (company-call-backend 'ignore-case) 'keep-prefix)
+        (insert (company-strip-prefix candidate))
+      (if (equal company-prefix candidate)
+          (company-select-next)
+          (delete-region (- (point) (length company-prefix)) (point))
+        (insert candidate))
+      )))
+
+(defun company-complete-common2 ()
+  (interactive)
+  (when (company-manual-begin)
+    (if (and (not (cdr company-candidates))
+             (equal company-common (car company-candidates)))
+        (company-complete-selection)
+      (company--insert-candidate2 company-common))))
+
+(define-key company-active-map [tab] 'company-complete-common2)
+(define-key company-active-map [backtab] 'company-select-previous) ; おまけ
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; auto-save-buffers
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -347,7 +341,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; quickrun
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
-(global-set-key (kbd "C-c c") 'quickrun)
+(global-set-key (kbd "M-i") 'quickrun)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; smooth-scroll
