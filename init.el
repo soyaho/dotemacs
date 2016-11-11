@@ -6,7 +6,7 @@
 ;; You may delete these explanatory comments.
 (package-initialize)
 
-(setenv "PATH" (concat (getenv "PATH") ":/usr/local/bin"))
+(setenv "PATH" (concat "/usr/local/bin:" (getenv "PATH")))
 (setq exec-path (append exec-path '("/usr/local/bin")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -18,7 +18,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; defalut setting
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 ;; OP messageを表示しない
 (setq inhibit-startup-message t)
 
@@ -55,19 +54,21 @@
 (set-face-foreground 'fringe                           "#666666") ; fringe(折り返し記号なでが出る部分)
 (set-face-background 'fringe                           "#000000") ; fringe背景
 
+;; key binding
+
+
 ;;
 ;; Window settings
 ;;______________________________________________________________________
 (if window-system
     (progn
-      ;; key binding
       (setq ns-command-modifier (quote meta))
       (setq ns-alternate-modifier (quote super))
 
       (tool-bar-mode -1)                  ; ツールバー非表示
       (set-scroll-bar-mode nil)           ; スクロールバー非表示
-;      (set-frame-parameter nil 'alpha 85) ; 透明度
-      (setq-default line-spacing 0.15)             ; 行間
+      (set-frame-parameter nil 'alpha 85) ; 透明度
+      (setq-default line-spacing 0.25)             ; 行間
 
       ;; フォントセットを作る
       (let* ((fontset-name "myfonts") ; フォントセットの名前
@@ -120,7 +121,8 @@
                           :background "#000000"
                           :inherit 'mode-line)
       (powerline-default-theme)
-))
+  )
+)
 
 ;; encoding
 ;;______________________________________________________________________
@@ -159,6 +161,10 @@
 
 ;; ミニバッファ履歴リストの最大長：tなら無限
 (setq history-length t)
+
+(when (functionp 'mac-auto-ascii-mode)  ;; ミニバッファに入力時、自動的に英語モード
+  (mac-auto-ascii-mode 1)
+)
 
 ;; highlight
 ;;______________________________________________________________________
@@ -201,14 +207,13 @@
 (column-number-mode t)
 
 ;; line number
-(global-linum-mode t)
-(setq linum-format "%3d  ")
-(custom-set-faces
- ;; '(linum ((t (:inherit (shadow default) :background "Gray23")))))
-  '(linum ((t (:inherit (shadow default))))))
+;;(global-linum-mode t)
+;;(setq linum-format "%3d  ")
+;;(custom-set-faces
+;; '(linum ((t (:inherit (shadow default) :background "Gray23")))))
 
 ;; Fill column
-(setq default-fill-column 72)
+;;(setq default-fill-column 72)
 
 ;; Truncate
 (setq truncate-lines t)
@@ -532,3 +537,10 @@
 (require 'ruby-block)
 (ruby-block-mode t)
 (setq ruby-block-highlight-toggle t)
+
+
+;; --------------------------------------------------
+;; octave-mode
+;; 
+;; --------------------------------------------------;
+(add-to-list 'auto-mode-alist '("\\.m$" . octave-mode))
