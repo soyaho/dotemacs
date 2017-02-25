@@ -2,6 +2,8 @@
 (source melpa)
 (source marmalade)
 
+(depends-on "coffee-mode")
+
 (depends-on "ruby-mode")
 (depends-on "ruby-end")
 (depends-on "ruby-block")

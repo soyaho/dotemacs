@@ -280,12 +280,17 @@
   "Emacs commands history")
 
 (custom-set-variables
- '(helm-mini-default-sources '(helm-source-buffers-list
-                               helm-source-recentf
-                               helm-source-files-in-current-dir
-                               helm-source-emacs-commands-history
-                               helm-source-emacs-commands
-                               )))
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(anzu-deactivate-region t)
+ '(anzu-mode-lighter "")
+ '(anzu-search-threshold 1000)
+ '(helm-mini-default-sources
+   (quote
+    (helm-source-buffers-list helm-source-recentf helm-source-files-in-current-dir helm-source-emacs-commands-history helm-source-emacs-commands)))
+ '(package-selected-packages (quote (package-build shut-up epl git commander f dash s))))
 
 (define-key global-map (kbd "C-o") 'helm-mini)
 (define-key global-map (kbd "M-y") 'helm-show-kill-ring)
@@ -345,10 +350,7 @@
 ;; anzu
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 (global-anzu-mode +1)
-(custom-set-variables
- '(anzu-mode-lighter "")
- '(anzu-deactivate-region t)
- '(anzu-search-threshold 1000))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; quickrun
@@ -537,11 +539,3 @@
 (require 'ruby-block)
 (ruby-block-mode t)
 (setq ruby-block-highlight-toggle t)
-
-
-;; --------------------------------------------------
-;; octave-mode
-;; 
-;; --------------------------------------------------;
-(add-to-list 'auto-mode-alist '("\\.m$" . octave-mode))
-(put 'dired-find-alternate-file 'disabled nil)
