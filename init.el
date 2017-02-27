@@ -67,7 +67,7 @@
 
       (tool-bar-mode -1)                  ; ツールバー非表示
       (set-scroll-bar-mode nil)           ; スクロールバー非表示
-      (set-frame-parameter nil 'alpha 85) ; 透明度
+      (set-frame-parameter nil 'alpha 90) ; 透明度
       (setq-default line-spacing 0.25)             ; 行間
 
       ;; フォントセットを作る
