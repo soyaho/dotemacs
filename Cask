@@ -2,8 +2,11 @@
 (source melpa)
 (source marmalade)
 
+;; lua for hammerspoon
+(depends-on "lua-mode")
+;; coffee-script for hubot
 (depends-on "coffee-mode")
-
+;; ruby
 (depends-on "ruby-mode")
 (depends-on "ruby-end")
 (depends-on "ruby-block")
@@ -25,7 +28,6 @@
 (depends-on "highlight-symbol")
 (depends-on "wgrep")
 (depends-on "color-theme-tango")
-;; (depends-on "color-theme-solarized")
 (depends-on "rainbow-delimiters")
 (depends-on "yascroll")
 (depends-on "recentf-ext")

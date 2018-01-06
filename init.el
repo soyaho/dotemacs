@@ -1,11 +1,4 @@
-;; PATHを通す
-
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
 (package-initialize)
-
 (setenv "PATH" (concat "/usr/local/bin:" (getenv "PATH")))
 (setq exec-path (append exec-path '("/usr/local/bin")))
 
@@ -32,6 +25,13 @@
 
 ;; backup file残さない
 (setq make-backup-files nil)
+;; scratchは残したい
+(add-hook 'emacs-startup-hook
+      '(lambda ()
+         (with-current-buffer "*scratch*"
+           (auto-save-mode)
+           (set (make-local-variable 'auto-save-timeout) 10)
+           (set (make-local-variable 'auto-save-interval) 20))))
 
 ;; Color
 ;;______________________________________________________________________
@@ -54,9 +54,6 @@
 (set-face-foreground 'fringe                           "#666666") ; fringe(折り返し記号なでが出る部分)
 (set-face-background 'fringe                           "#000000") ; fringe背景
 
-;; key binding
-
-
 ;;
 ;; Window settings
 ;;______________________________________________________________________
@@ -67,20 +64,23 @@
 
       (tool-bar-mode -1)                  ; ツールバー非表示
       (set-scroll-bar-mode nil)           ; スクロールバー非表示
-      (set-frame-parameter nil 'alpha 90) ; 透明度
-      (setq-default line-spacing 0.25)             ; 行間
+      (set-frame-parameter nil 'alpha 85) ; 透明度
+      (setq-default line-spacing 0.2)    ; 行間
 
       ;; フォントセットを作る
-      (let* ((fontset-name "myfonts") ; フォントセットの名前
-             (size 14) ; ASCIIフォントのサイズ [9/10/12/14/15/17/19/20/...]
+      (let* (
+             (fontset-name "myfonts") ; フォントセットの名前
+             (size 13) ; ASCIIフォントのサイズ [9/10/12/14/15/17/19/20/...]
              (asciifont "Monaco") ; ASCIIフォント
              (jpfont "Hiragino Maru Gothic ProN") ; 日本語フォント
              (font (format "%s-%d:weight=normal:slant=normal" asciifont size))
              (fontspec (font-spec :family asciifont))
              (jp-fontspec (font-spec :family jpfont))
-             (fsn (create-fontset-from-ascii-font font nil fontset-name)))
+             (fsn (create-fontset-from-ascii-font font nil fontset-name))
+             )
         (set-fontset-font fsn 'japanese-jisx0213.2004-1 jp-fontspec)
         (set-fontset-font fsn 'japanese-jisx0213-2 jp-fontspec)
+        (set-fontset-font fsn 'japanese-jisx0208 jp-fontspec)
         (set-fontset-font fsn 'katakana-jisx0201 jp-fontspec) ; 半角カナ
         (set-fontset-font fsn '(#x0080 . #x024F) fontspec)    ; 分音符付きラテン
         (set-fontset-font fsn '(#x0370 . #x03FF) fontspec)    ; ギリシャ文字
@@ -90,12 +90,7 @@
       (add-to-list 'default-frame-alist '(font . "fontset-myfonts"))
 
       ;; フォントサイズの比を設定
-      (dolist (elt '(("^-apple-hiragino.*"               . 1.0);1.2
-                     (".*osaka-bold.*"                   . 1.0);1.2
-                     (".*osaka-medium.*"                 . 1.0);1.2
-                     (".*courier-bold-.*-mac-roman"      . 1.0)
-                     (".*monaco cy-bold-.*-mac-cyrillic" . 1.0);0.9
-                     (".*monaco-bold-.*-mac-roman"       . 1.0);0.9
+      (dolist (elt '((".*Hiragino.*"                     . 1)
                      ))
         (add-to-list 'face-font-rescale-alist elt))
 
@@ -110,15 +105,15 @@
       (require 'powerline)
       (set-face-attribute 'mode-line nil
                           :foreground "#fff"
-                          :background "#003300"
+                          :background "#001100"
                           :box nil)
       (set-face-attribute 'powerline-active1 nil
                           :foreground "#fff"
-                          :background "#006600"
+                          :background "#003300"
                           :inherit 'mode-line)
       (set-face-attribute 'powerline-active2 nil
-                          :foreground "#000"
-                          :background "#000000"
+                          :foreground "#fff"
+                          :background "#001100"
                           :inherit 'mode-line)
       (powerline-default-theme)
   )
@@ -168,11 +163,6 @@
 
 ;; highlight
 ;;______________________________________________________________________
-;; highlight current line
-;;(require 'highlight-current-line)
-;;(highlight-current-line-on t)
-;;(set-face-background 'highlight-current-line-face "#004132")
-;;(set-face-background 'highlight-current-line-face "#004132")
 
 ;; highlight paren
 (show-paren-mode 1)
@@ -298,7 +288,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; company
 ;;;;;;;;;;;;;;;;;;;;;;;;;
-(global-company-mode) ; 全バッファで有効にする 
+(global-company-mode) ; 全バッファで有効にする
 (setq company-idle-delay 0.1) ; デフォルトは0.5
 (setq company-minimum-prefix-length 2) ; デフォルトは4
 (setq company-selection-wrap-around t) ; 候補の一番下でさらに下に行こうとすると一番上に戻る
