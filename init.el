@@ -11,6 +11,15 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; defalut setting
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; encoding
+(set-language-environment       "Japanese")
+(prefer-coding-system           'utf-8-unix)
+(setq                           default-buffer-file-coding-system 'utf-8)
+(set-buffer-file-coding-system  'utf-8)
+(set-terminal-coding-system     'utf-8)
+(set-keyboard-coding-system     'utf-8)
+(set-clipboard-coding-system    'utf-8)
+
 ;; OP messageを表示しない
 (setq inhibit-startup-message t)
 
@@ -34,7 +43,6 @@
            (set (make-local-variable 'auto-save-interval) 20))))
 
 ;; Color
-;;______________________________________________________________________
 (set-foreground-color                                  "#CCCCCC") ; 文字色
 (set-background-color                                  "#000000") ; 背景色
 (set-cursor-color                                      "#FF0000") ; カーソル色
@@ -54,9 +62,7 @@
 (set-face-foreground 'fringe                           "#666666") ; fringe(折り返し記号なでが出る部分)
 (set-face-background 'fringe                           "#000000") ; fringe背景
 
-;;
 ;; Window settings
-;;______________________________________________________________________
 (if window-system
     (progn
       (setq ns-command-modifier (quote meta))
@@ -89,11 +95,6 @@
       ;; デフォルトのフレームパラメータでフォントセットを指定
       (add-to-list 'default-frame-alist '(font . "fontset-myfonts"))
 
-      ;; フォントサイズの比を設定
-      (dolist (elt '((".*Hiragino.*"                     . 1)
-                     ))
-        (add-to-list 'face-font-rescale-alist elt))
-
       ;; デフォルトフェイスにフォントセットを設定
       ;; # これは起動時に default-frame-alist に従ったフレームが
       ;; # 作成されない現象への対処
@@ -118,16 +119,6 @@
       (powerline-default-theme)
   )
 )
-
-;; encoding
-;;______________________________________________________________________
-(set-language-environment       "Japanese")
-(prefer-coding-system           'utf-8-unix)
-(setq                           default-buffer-file-coding-system 'utf-8)
-(set-buffer-file-coding-system  'utf-8)
-(set-terminal-coding-system     'utf-8)
-(set-keyboard-coding-system     'utf-8)
-(set-clipboard-coding-system    'utf-8)
 
 ;; key binding
 (keyboard-translate ?\C-h ?\C-?) ;; C-h にバックスペース
@@ -161,9 +152,6 @@
   (mac-auto-ascii-mode 1)
 )
 
-;; highlight
-;;______________________________________________________________________
-
 ;; highlight paren
 (show-paren-mode 1)
 
@@ -184,9 +172,6 @@
         (sit-for 0.5)
         (delete-overlay ol)))))
 
-;;
-;; miscellaneous
-;;______________________________________________________________________
 ;; Bell
 (setq ring-bell-function 'ignore)
 
@@ -195,15 +180,6 @@
 
 ;; Column number
 (column-number-mode t)
-
-;; line number
-;;(global-linum-mode t)
-;;(setq linum-format "%3d  ")
-;;(custom-set-faces
-;; '(linum ((t (:inherit (shadow default) :background "Gray23")))))
-
-;; Fill column
-;;(setq default-fill-column 72)
 
 ;; Truncate
 (setq truncate-lines t)
@@ -345,7 +321,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; quickrun
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
-(global-set-key (kbd "M-i") 'quickrun)
+n(global-set-key (kbd "M-i") 'quickrun)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; smooth-scroll
