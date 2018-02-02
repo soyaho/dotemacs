@@ -321,7 +321,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; quickrun
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
-n(global-set-key (kbd "M-i") 'quickrun)
+(global-set-key (kbd "M-i") 'quickrun)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; smooth-scroll
