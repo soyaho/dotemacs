@@ -3,10 +3,17 @@
 (setq exec-path (append exec-path '("/usr/local/bin")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; cask
+;; package manager
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
-(require 'cask)
-(cask-initialize)
+(require 'package)
+  
+;; HTTP
+(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
+(add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/") t)
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+(add-to-list 'package-archives '("ELPA" . "http://tromey.com/elpa/") t)
+
+(package-initialize)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; defalut setting
@@ -102,7 +109,9 @@
 
       (setq ns-pop-up-frames nil)
 
+      ;;;;;;;;;;;;;;;;;;;;;;;;
       ;; powerline
+      ;;;;;;;;;;;;;;;;;;;;;;;;
       (require 'powerline)
       (set-face-attribute 'mode-line nil
                           :foreground "#fff"
@@ -116,9 +125,9 @@
                           :foreground "#fff"
                           :background "#001100"
                           :inherit 'mode-line)
-      (powerline-default-theme)
+      (powerline-default-theme)      
+      )
   )
-)
 
 ;; key binding
 (keyboard-translate ?\C-h ?\C-?) ;; C-h にバックスペース
@@ -172,6 +181,32 @@
         (sit-for 0.5)
         (delete-overlay ol)))))
 
+;; whitespace
+(global-whitespace-mode 1)
+;;; 強調したい要素を指定
+(setq whitespace-style '(space-mark tab-mark face spaces tabs trailing))
+;;; whitespace-space を全角スペースと定義
+(setq whitespace-space-regexp "\\(\u3000+\\)")
+;;; 全角スペース，タブに使用する記号
+(setq whitespace-display-mappings
+      '((space-mark ?\u3000 [?□] [?_ ?_])
+        (tab-mark     ?\t    [?^ ?\t] [?\\ ?\t])))
+;;; 各要素の face 設定
+(set-face-attribute 'whitespace-space nil
+                    :foreground "green"
+                    :background 'unspecified)
+(set-face-attribute 'whitespace-tab nil
+                    :foreground "purple"
+                    :background 'unspecified
+                    :underline t)
+(set-face-attribute 'whitespace-trailing nil
+                    :foreground "purple"
+                    :background 'unspecified
+                    :underline t)
+
+;;
+;; miscellaneous
+;;______________________________________________________________________
 ;; Bell
 (setq ring-bell-function 'ignore)
 
@@ -210,11 +245,32 @@
 
 ;; diredバッファでC-sした時にファイル名だけにマッチするように
 (setq dired-isearch-filenames t)
-
-
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(anzu-deactivate-region t)
+ '(anzu-mode-lighter "")
+ '(anzu-search-threshold 1000)
+ '(helm-mini-default-sources
+   (quote
+    (helm-source-buffers-list helm-source-recentf helm-source-files-in-current-dir helm-source-emacs-commands-history helm-source-emacs-commands)))
+ '(package-selected-packages
+   (quote
+    (iedit smooth-scrolling smooth-scroll quickrun company auto-save-buffers-enhanced powerline anzu undo-tree package-build shut-up epl git commander f dash s))))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; helm
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
+(require 'helm)
+(require 'helm-config)
+
 (helm-mode 1)
 (add-to-list 'helm-completing-read-handlers-alist '(find-file . nil))
 
@@ -245,21 +301,29 @@
     :action #'command-execute)
   "Emacs commands history")
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(anzu-deactivate-region t)
- '(anzu-mode-lighter "")
- '(anzu-search-threshold 1000)
- '(helm-mini-default-sources
-   (quote
-    (helm-source-buffers-list helm-source-recentf helm-source-files-in-current-dir helm-source-emacs-commands-history helm-source-emacs-commands)))
- '(package-selected-packages (quote (package-build shut-up epl git commander f dash s))))
+
 
 (define-key global-map (kbd "C-o") 'helm-mini)
 (define-key global-map (kbd "M-y") 'helm-show-kill-ring)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; undo-tree
+;;;;;;;;;;;;;;;;;;;;;;;;;;
+(require 'undo-tree)
+
+(global-undo-tree-mode t)
+(global-set-key (kbd "M-/") 'undo-tree-redo)
+(global-set-key (kbd "M-u") 'undo-tree-visualize)
+
+;; undo-limit
+(setq undo-limit 600000)
+(setq undo-strong-limit 900000)
+
+;;;;;;;;;;;;;;;;;;;;;;
+;; anzu
+;;;;;;;;;;;;;;;;;;;;;;
+(global-anzu-mode +1)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; company
@@ -298,30 +362,16 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; auto-save-buffers
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
+(require 'auto-save-buffers-enhanced)
 (setq auto-save-buffers-enhanced-interval 5) ; 指定のアイドル秒で保存
 (auto-save-buffers-enhanced t)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; undo-tree
-;;;;;;;;;;;;;;;;;;;;;;;;;;
-(global-undo-tree-mode t)
-(global-set-key (kbd "M-/") 'undo-tree-redo)
-(global-set-key (kbd "M-u") 'undo-tree-visualize)
-
-;; undo-limit
-(setq undo-limit 600000)
-(setq undo-strong-limit 900000)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; anzu
-;;;;;;;;;;;;;;;;;;;;;;;;;;
-(global-anzu-mode +1)
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; quickrun
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
+(require 'quickrun)
 (global-set-key (kbd "M-i") 'quickrun)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; smooth-scroll
@@ -332,7 +382,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; smooth-scrolling
 ;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;(require 'smooth-scrolling)
+(require 'smooth-scrolling)
+(smooth-scrolling-mode 1)
 (setq scroll-step 1)
 (setq scroll-conservatively 10000)
 (setq auto-window-vscroll nil)
@@ -347,161 +398,3 @@
 (define-key iedit-mode-keymap (kbd "M-n") 'iedit-expand-down-a-line)
 (define-key iedit-mode-keymap (kbd "M-h") 'iedit-restrict-function)
 (define-key iedit-mode-keymap (kbd "M-i") 'iedit-restrict-current-line)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; whitespace
-;;;;;;;;;;;;;;;;;;;;;;;;;;
-(global-whitespace-mode 1)
-;;; 強調したい要素を指定
-(setq whitespace-style '(space-mark tab-mark face spaces tabs trailing))
-;;; whitespace-space を全角スペースと定義
-(setq whitespace-space-regexp "\\(\u3000+\\)")
-;;; 全角スペース，タブに使用する記号
-(setq whitespace-display-mappings
-      '((space-mark ?\u3000 [?□] [?_ ?_])
-        (tab-mark     ?\t    [?^ ?\t] [?\\ ?\t])))
-;;; 各要素の face 設定
-(set-face-attribute 'whitespace-space nil
-                    :foreground "green"
-                    :background 'unspecified)
-(set-face-attribute 'whitespace-tab nil
-                    :foreground "purple"
-                    :background 'unspecified
-                    :underline t)
-(set-face-attribute 'whitespace-trailing nil
-                    :foreground "purple"
-                    :background 'unspecified
-                    :underline t)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; web-mode
-;;;;;;;;;;;;;;;;;;;;;;;;;;
-(add-to-list 'auto-mode-alist '("\\.phtml$"     . web-mode))
-(add-to-list 'auto-mode-alist '("\\.tpl\\.php$" . web-mode))
-(add-to-list 'auto-mode-alist '("\\.jsp$"       . web-mode))
-(add-to-list 'auto-mode-alist '("\\.as[cp]x$"   . web-mode))
-(add-to-list 'auto-mode-alist '("\\.erb$"       . web-mode))
-(add-to-list 'auto-mode-alist '("\\.html?$"     . web-mode))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; nxml-mode
-;;;;;;;;;;;;;;;;;;;;;;;;;;
-(add-hook 'nxml-mode-hook
-          (lambda ()
-            ;; 更新タイムスタンプの自動挿入
-            (setq time-stamp-line-limit 10000)
-            (if (not (memq 'time-stamp write-file-hooks))
-                (setq write-file-hooks
-                      (cons 'time-stamp write-file-hooks)))
-            (setq time-stamp-format "%3a %3b %02d %02H:%02M:%02S %:y %Z")
-            (setq time-stamp-start "Last modified:[ \t]")
-            (setq time-stamp-end "$")
-            ;;
-            (setq auto-fill-mode -1)
-            (setq nxml-slash-auto-complete-flag t)      ; スラッシュの入力で終了タグを自動補完
-            (setq nxml-child-indent 2)                  ; タグのインデント幅
-            (setq nxml-attribute-indent 4)              ; 属性のインデント幅
-            (setq nxml-bind-meta-tab-to-complete-flag t) 
-            (setq nxml-slash-auto-complete-flag t)      ; </の入力で閉じタグを補完する
-            (setq nxml-sexp-element-flag t)             ; C-M-kで下位を含む要素全体をkillする
-            (setq nxml-char-ref-display-glyph-flag nil) ; グリフは非表示
-            (setq tab-width 4)))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; json-mode
-;;;;;;;;;;;;;;;;;;;;;;;;;;
-(add-to-list 'auto-mode-alist '("\\.json$" . json-mode))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; js2-mode
-;;;;;;;;;;;;;;;;;;;;;;;;;;
-(autoload 'js2-mode "js2-mode" nil t)
-(setq auto-mode-alist (cons '("\\.\\(js\\|gs\\)$" . js2-mode) auto-mode-alist))
-
-(defun my-js2-indent-function ()
-  (interactive)
-  (save-restriction
-    (widen)
-    (let* ((inhibit-point-motion-hooks t)
-           (parse-status (save-excursion (syntax-ppss (point-at-bol))))
-           (offset (- (current-column) (current-indentation)))
-           (indentation (js--proper-indentation parse-status))
-           node)
-      (save-excursion
-        (back-to-indentation)
-        (if (looking-at "case\\s-")
-            (setq indentation (+ indentation (/ js-indent-level 2))))
-        (setq node (js2-node-at-point))
-        (when (and node
-                   (= js2-NAME (js2-node-type node))
-                   (= js2-VAR (js2-node-type (js2-node-parent node))))
-          (setq indentation (+ 2 indentation))))
-      (indent-line-to indentation)
-      (when (> offset 0) (forward-char offset)))))
-
-(defun my-js2-mode-hook ()
-  (require 'js)
-  (setq js-indent-level 2
-        indent-tabs-mode nil
-        c-basic-offset 2
-        js2-mirror-mode nil)
-  (c-toggle-auto-state 0)
-  (c-toggle-hungry-state 1)
-  (set (make-local-variable 'indent-line-function) 'my-js2-indent-function)
-  (define-key js2-mode-map (kbd "C-m") 'newline-and-indent)
-  (define-key js2-mode-map (kbd "M-;") 'js2-mode-toggle-element)
-  (define-key js2-mode-map (kbd "C-M-;") 'js2-mode-toggle-hide-functions)
-  (if (featurep 'js2-highlight-vars)
-      (js2-highlight-vars-mode)
-    )
-  )
-(add-hook 'js2-mode-hook 'my-js2-mode-hook)
-
-;; --------------------------------------------------
-;; ruby-mode
-;; http://shibayu36.hatenablog.com/entry/2013/03/18/192651
-;; --------------------------------------------------
-(autoload 'ruby-mode "ruby-mode"
-  "Mode for editing ruby source files" t)
-(add-to-list 'auto-mode-alist '("\\.rb$" . ruby-mode))
-(add-to-list 'auto-mode-alist '("Capfile$" . ruby-mode))
-(add-to-list 'auto-mode-alist '("Gemfile$" . ruby-mode))
-(add-to-list 'interpreter-mode-alist '("ruby" . ruby-mode)) ;; shebangがrubyの場合、ruby-modeを開く
-
-;; ruby-modeのインデントを改良する
-(setq ruby-deep-indent-paren-style nil)
-(defadvice ruby-indent-line (after unindent-closing-paren activate)
-  (let ((column (current-column))
-        indent offset)
-    (save-excursion
-      (back-to-indentation)
-      (let ((state (syntax-ppss)))
-        (setq offset (- column (current-column)))
-        (when (and (eq (char-after) ?\))
-                   (not (zerop (car state))))
-          (goto-char (cadr state))
-          (setq indent (current-indentation)))))
-    (when indent
-      (indent-line-to indent)
-      (when (> offset 0) (forward-char offset)))))
-
-;; --------------------------------------------------
-;; ruby-end
-;; endや括弧などを自動挿入する
-;; http://blog.livedoor.jp/ooboofo3/archives/53748087.html
-;; --------------------------------------------------
-(require 'ruby-end)
-(add-hook 'ruby-mode-hook
-  '(lambda ()
-    (abbrev-mode 1)
-    (electric-pair-mode t)
-    (electric-indent-mode t)
-    (electric-layout-mode t)))
-
-;; --------------------------------------------------
-;; ruby-block
-;; endにカーソルを合わせると、そのendに対応する行をハイライトする
-;; --------------------------------------------------
-(require 'ruby-block)
-(ruby-block-mode t)
-(setq ruby-block-highlight-toggle t)
