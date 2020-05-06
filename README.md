@@ -1,1 +1,1 @@
-# dotemacs
+# dotemacs -> .emacs
